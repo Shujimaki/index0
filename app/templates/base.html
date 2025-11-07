@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block page_title %}our title{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <nav class="navigation">
+            <div class="nav-container">
+                <a href="/" class="brand">index0</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="content-wrapper">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer>
+        <p>&copy; {% block year %}{{ current_year }}{% endblock %} index0. Licensed under MIT.</p>
+    </footer>
+    
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
