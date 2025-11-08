@@ -95,7 +95,7 @@
 
             <form class="login-form" method="POST" action="{{ url_for('web.login') }}" onsubmit="showTemporaryMessage('Attempting login for: ' + this.username.value + '...', '#e53e3e');">
                 
-                <input type="text" name="username" placeholder="Username" required
+                <input type="text" name="username" placeholder="Full Name" required
                        class="w-full p-3 mb-5 border border-gray-300 rounded-lg text-lg focus:border-[#e53e3e] focus:outline-none transition duration-150">
                 
                 <input type="password" name="password" placeholder="Password" required
@@ -136,6 +136,10 @@
                 
                 <label for="reg-email" class="block text-left text-gray-700 text-base font-semibold mb-2">Email</label>
                 <input type="email" id="reg-email" name="email" placeholder="Email" required
+                       class="w-full p-3 mb-5 border-2 border-[#b83131] rounded-full text-lg focus:outline-none focus:ring-1 focus:ring-[#e53e3e] transition duration-150">
+
+                <label for="reg-password" class="block text-left text-gray-700 text-base font-semibold mb-2">Password</label>
+                <input type="password" id="reg-password" name="password" placeholder="Password (min. 6 characters)" required minlength="6"
                        class="w-full p-3 mb-5 border-2 border-[#b83131] rounded-full text-lg focus:outline-none focus:ring-1 focus:ring-[#e53e3e] transition duration-150">
 
                 <div class="flex flex-wrap -mx-2 mb-4">

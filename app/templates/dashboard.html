@@ -27,7 +27,49 @@
         .header {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             margin-bottom: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .onboarding-button {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        .onboarding-button:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        .logout-button {
+            background-color: #8b0000;
+            color: white;
+        }
+
+        .logout-button:hover {
+            background-color: #660000;
+            transform: translateY(-2px);
         }
 
         .yanig-logo {
@@ -58,6 +100,38 @@
         .welcome-text {
             font-size: 2.5em;
             color: #4a4a4a;
+        }
+
+        /* Flash Messages */
+        .flash-message {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .flash-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Dashboard Card Styling */
@@ -281,18 +355,34 @@
 
     <div class="container">
         <div class="header">
-            <div class="yanig-logo">
-                <!-- Jinja: Use logo URL passed from Flask --><img src="{{ logo_url }}" alt="YANIG Icon"/>
+            <div class="header-left">
+                <div class="yanig-logo">
+                    <!-- Jinja: Use logo URL passed from Flask --><img src="{{ logo_url }}" alt="YANIG Icon"/>
+                </div>
+                <!-- Removed the line below: <div class="yanig-logo-text">YANIG</div> --><!-- Jinja: Insert mock user name --><h1 class="welcome-text">Welcome, {{ user_name }}!</h1>
             </div>
-            <!-- Removed the line below: <div class="yanig-logo-text">YANIG</div> --><!-- Jinja: Insert mock user name --><h1 class="welcome-text">Welcome, {{ user_name }}!</h1>
+            <div class="header-right">
+                <a href="/onboarding" class="header-button onboarding-button">📚 Onboarding</a>
+                <a href="{{ url_for('web.logout') }}" class="header-button logout-button">🚪 Logout</a>
+            </div>
         </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
         <div class="dashboard-card">
             <div class="card-header">
                 <h2>DASHBOARD</h2>
                 <div class="save-section">
-                    <p class="save-prompt">You have unsaved changes. Save to keep preferences.</p>
-                    <button class="save-button" onclick="alert('Preferences saved successfully!')">Save</button>
+                    <button class="save-button" type="submit" form="preferences-form">Save</button>
                 </div>
             </div>
 
@@ -300,8 +390,9 @@
                 <div class="magnitude-section">
                     <h3>Minimum Earthquake Magnitude</h3>
                     <div class="slider-container">
-                        <input type="range" id="magnitude-slider" class="magnitude-slider" min="1" max="9" step="0.5" value="5.0" name="min_magnitude">
-                        <p class="magnitude-display">Magnitude: <span id="magnitude-value">5.0</span></p>
+                        <input type="range" id="magnitude-slider" class="magnitude-slider" min="1" max="9" step="0.5" 
+                               value="{{ settings.magnitude_threshold }}" name="magnitude">
+                        <p class="magnitude-display">Magnitude: <span id="magnitude-value">{{ settings.magnitude_threshold }}</span></p>
                     </div>
                 </div>
 
@@ -309,10 +400,14 @@
                     <div class="location-options">
                         <h3>Preferred Location</h3>
                         <div class="radio-group">
-                            <input type="radio" id="near-me" name="location-preference" value="near-me" checked onchange="toggleLocationDropdowns(false)">
+                            <input type="radio" id="near-me" name="location_preference" value="near_me" 
+                                   {% if settings.monitor_location_type == 'near_me' %}checked{% endif %}
+                                   onchange="toggleLocationDropdowns(false)">
                             <label for="near-me" class="radio-button-label">Near Me</label>
                             
-                            <input type="radio" id="choose-location" name="location-preference" value="choose-location" onchange="toggleLocationDropdowns(true)">
+                            <input type="radio" id="choose-location" name="location_preference" value="custom" 
+                                   {% if settings.monitor_location_type == 'custom' %}checked{% endif %}
+                                   onchange="toggleLocationDropdowns(true)">
                             <label for="choose-location" class="radio-button-label">Choose Location</label>
                         </div>
                     </div>
@@ -341,7 +436,64 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="safety-tips-section">
+                    <h3>Additional Options</h3>
+                    <label>
+                        <input type="checkbox" name="safety_tips" id="safety-tips-checkbox" {% if settings.add_safety_tips %}checked{% endif %}>
+                        Include safety tips in notifications (for magnitude ≥ 4.0)
+                    </label>
+                </div>
             </form>
+
+            <!-- Test Email Section -->
+            <div class="test-email-section" style="margin-top: 30px; padding-top: 30px; border-top: 2px solid #e0e0e0;">
+                <h3 style="color: #a52a2a; margin-bottom: 20px;">🧪 Test Email Notification</h3>
+                <p style="font-size: 0.9em; color: #666; margin-bottom: 20px;">
+                    Simulate an earthquake to test if you would receive an email based on your current preferences.
+                </p>
+                
+                <form id="test-email-form" method="POST" action="/test-notification" style="background-color: #f9f9f9; padding: 20px; border-radius: 8px;">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px;">Test Earthquake Magnitude</label>
+                        <input type="range" id="test-magnitude-slider" name="test_magnitude" min="1" max="9" step="0.5" value="4.5" 
+                               style="width: 100%; cursor: pointer;">
+                        <p style="font-size: 0.9em; color: #666; margin-top: 5px;">
+                            Magnitude: <span id="test-magnitude-value" style="font-weight: bold; color: #a52a2a;">4.5</span>
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px;">Test Earthquake Location</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                            <div>
+                                <select id="test-region" name="test_region" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <option value="" disabled selected>Select Region</option>
+                                    {% for region in regions %}
+                                    <option value="{{ region.value }}">{{ region.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <select id="test-province" name="test_province" required disabled style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <option value="" disabled selected>Select Region First</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select id="test-city" name="test_city" required disabled style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <option value="" disabled selected>Select Province First</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" style="background-color: #a52a2a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1em; transition: background-color 0.3s;">
+                        🚀 Run Test
+                    </button>
+                </form>
+
+                <div id="test-result" style="margin-top: 20px; padding: 15px; border-radius: 6px; display: none;"></div>
+            </div>
         </div>
     </div>
 
@@ -486,6 +638,143 @@
             // Set initial magnitude display
             magnitudeValue.textContent = slider.value;
         };
+
+        // --- Test Email Section Logic ---
+        const testMagnitudeSlider = document.getElementById('test-magnitude-slider');
+        const testMagnitudeValue = document.getElementById('test-magnitude-value');
+        const testRegion = document.getElementById('test-region');
+        const testProvince = document.getElementById('test-province');
+        const testCity = document.getElementById('test-city');
+        const testEmailForm = document.getElementById('test-email-form');
+        const testResult = document.getElementById('test-result');
+
+        // Update test magnitude display
+        if (testMagnitudeSlider) {
+            testMagnitudeSlider.addEventListener('input', () => {
+                testMagnitudeValue.textContent = testMagnitudeSlider.value;
+            });
+        }
+
+        // Test section cascading dropdowns
+        async function populateTestProvinces(regionCode) {
+            testProvince.innerHTML = '<option value="" disabled selected>Loading...</option>';
+            testProvince.disabled = true;
+            testCity.innerHTML = '<option value="" disabled selected>Select Province First</option>';
+            testCity.disabled = true;
+
+            if (regionCode) {
+                try {
+                    const response = await fetch(`/api/provinces/${regionCode}`);
+                    const provinces = await response.json();
+                    testProvince.innerHTML = '<option value="" disabled selected>Select Province</option>';
+                    provinces.forEach(province => {
+                        const option = document.createElement('option');
+                        option.value = province.value;
+                        option.textContent = province.name;
+                        testProvince.appendChild(option);
+                    });
+                    testProvince.disabled = false;
+                } catch (error) {
+                    testProvince.innerHTML = '<option value="" disabled selected>Error Loading</option>';
+                }
+            }
+        }
+
+        async function populateTestCities(regionCode, provinceCode) {
+            testCity.innerHTML = '<option value="" disabled selected>Loading...</option>';
+            testCity.disabled = true;
+
+            if (regionCode && provinceCode) {
+                try {
+                    const response = await fetch(`/api/cities/${regionCode}/${provinceCode}`);
+                    const cities = await response.json();
+                    testCity.innerHTML = '<option value="" disabled selected>Select City</option>';
+                    cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.value;
+                        option.textContent = city.name;
+                        testCity.appendChild(option);
+                    });
+                    testCity.disabled = false;
+                } catch (error) {
+                    testCity.innerHTML = '<option value="" disabled selected>Error Loading</option>';
+                }
+            }
+        }
+
+        if (testRegion) {
+            testRegion.addEventListener('change', function() {
+                populateTestProvinces(this.value);
+            });
+        }
+
+        if (testProvince) {
+            testProvince.addEventListener('change', function() {
+                const regionCode = testRegion.value;
+                if (regionCode) {
+                    populateTestCities(regionCode, this.value);
+                }
+            });
+        }
+
+        // Handle test form submission
+        if (testEmailForm) {
+            testEmailForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                testResult.style.display = 'block';
+                testResult.style.backgroundColor = '#fff3cd';
+                testResult.style.border = '1px solid #ffc107';
+                testResult.style.color = '#856404';
+                testResult.innerHTML = '⏳ Testing notification criteria...';
+
+                const formData = new FormData(testEmailForm);
+                
+                try {
+                    const response = await fetch('/test-notification', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        if (result.would_send) {
+                            testResult.style.backgroundColor = '#d4edda';
+                            testResult.style.border = '1px solid #c3e6cb';
+                            testResult.style.color = '#155724';
+                            testResult.innerHTML = `
+                                ✅ <strong>Email Would Be Sent!</strong><br>
+                                <div style="margin-top: 10px; font-size: 0.9em;">
+                                    ${result.reason}<br>
+                                    <strong>Test Earthquake:</strong> ${result.test_earthquake.magnitude} magnitude at ${result.test_earthquake.location}
+                                </div>
+                            `;
+                        } else {
+                            testResult.style.backgroundColor = '#f8d7da';
+                            testResult.style.border = '1px solid #f5c6cb';
+                            testResult.style.color = '#721c24';
+                            testResult.innerHTML = `
+                                ❌ <strong>No Email Would Be Sent</strong><br>
+                                <div style="margin-top: 10px; font-size: 0.9em;">
+                                    ${result.reason}
+                                </div>
+                            `;
+                        }
+                    } else {
+                        testResult.style.backgroundColor = '#f8d7da';
+                        testResult.style.border = '1px solid #f5c6cb';
+                        testResult.style.color = '#721c24';
+                        testResult.innerHTML = `❌ Error: ${result.error}`;
+                    }
+                } catch (error) {
+                    testResult.style.backgroundColor = '#f8d7da';
+                    testResult.style.border = '1px solid #f5c6cb';
+                    testResult.style.color = '#721c24';
+                    testResult.innerHTML = `❌ Error: ${error.message}`;
+                }
+            });
+        }
     </script>
 </body>
 </html>

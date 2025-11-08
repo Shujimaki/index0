@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earthquake Preparedness Dashboard</title>
+    <!-- Using Inter font and Tailwind CSS for utility and design consistency -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Setting the body background to the light gray/beige color */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 24px;
+            background-color: #b32134; /* Light Gray/Beige Background */
+            display: flex;
+            justify-content: center;
+        }
+        
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            gap: 32px;
+        }
+
+        /* Responsive stacking for smaller screens */
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                gap: 24px;
+                padding: 0 16px;
+            }
+            .left-panel, .right-panel {
+                max-width: 100% !important;
+            }
+        }
+
+        /* --- Left Section (Emergency Kit) --- */
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 500px;
+        }
+
+        /* Header text color is BLACK */
+        .heading-left {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff; 
+            margin-bottom: 20px;
+        }
+
+        /* White card for the Emergency Kit */
+        .emergency-kit-box {
+            background-color: white;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            min-height: 480px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+        }
+
+        .emergency-kit-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; 
+            border-radius: 20px;
+        }
+
+
+        /* --- Right Section (About Yanig) --- */
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+        }
+        
+        /* Header text color is BLACK */
+        .heading-right {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff; 
+            margin-bottom: 20px;
+        }
+
+        /* Content blocks are now WHITE */
+        .content-block {
+            background-color: white; /* Changed to white */
+            color: #1a1a1a; /* Text remains black for contrast */
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-block h3 {
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .content-block p {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .dashboard-button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .dashboard-button {
+            background-color: white;
+            color: #C62828; /* Red text for the button */
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            /* Match the button shape from the image */
+            border-top-left-radius: 0;
+        }
+        
+        .dashboard-button:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-1px);
+        }
+
+        .prev-button {
+            background-color: white;
+            color: #4a90e2;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border-top-right-radius: 0;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .prev-button:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-1px);
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+            gap: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- LEFT PART: Earthquake Emergency Kit -->
+        <div class="left-panel">
+            <h1 class="heading-left">Earthquake Emergency Kit</h1>
+            <div class="emergency-kit-box">
+                <!-- Image of the kit content, scaled to fit inside the white box -->
+                <img src="/static/preparedness%20graphic.png" alt="Earthquake Emergency Kit Contents" />
+            </div>
+        </div>
+
+        <!-- RIGHT PART: About Yanig Content Blocks -->
+        <div class="right-panel">
+            <h1 class="heading-right">About Yanig</h1>
+
+            <!-- This is the container that holds the content blocks and button -->
+            <div class="w-full">
+                <div class="content-block">
+                    <h3>Our Purpose</h3>
+                    <p>We are dedicated to providing a reliable and immediate emergency notification system focused on user safety during earthquakes.</p>
+                </div>
+
+                <div class="content-block">
+                    <h3>Vision Statement</h3>
+                    <p>To establish the standard in rapid, reliable, and personalized earthquake notification, building a network of safety where every individual is instantly informed when an earthquake occurs, ultimately contributing to a culture of preparedness and resilience.</p>
+                </div>
+
+                <div class="content-block">
+                    <h3>Statement From the Creators</h3>
+                    <p>We built this application because we understand the feeling of powerlessness when the earth shakes. Our commitment is simple: to transform uncertainty into preparation. By combining reliable official data with immediate notification to your emails, we aim to provide you and your loved ones with the crucial seconds needed to stay safe. Your security is our driving force.</p>
+                </div>
+
+                <div class="navigation-buttons">
+                    <a href="{{ url_for('web.onboarding') }}" class="prev-button">← Previous</a>
+                    <a href="{{ url_for('web.dashboard', user_id=session.get('user_id')) }}" class="dashboard-button" style="text-decoration: none;">Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

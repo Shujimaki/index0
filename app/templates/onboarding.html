@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding - YANIG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f0eb;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background-color: #a52a2a;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        h1 {
+            color: #a52a2a;
+            font-size: 2.5em;
+            margin: 0 0 10px 0;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .content {
+            margin-top: 30px;
+        }
+
+        .step {
+            background: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #a52a2a;
+        }
+
+        .step h2 {
+            color: #a52a2a;
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+
+        .step p {
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #a52a2a;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 30px;
+            background-color: #a52a2a;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #8b0000;
+        }
+
+        .next-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 30px;
+            background-color: #4a90e2;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin-left: 15px;
+        }
+
+        .next-button:hover {
+            background-color: #357abd;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .note {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ffc107;
+            margin-top: 20px;
+        }
+
+        .note strong {
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img src="/static/yaniglogo.png" alt="YANIG Logo"/>
+            </div>
+            <h1>Welcome to YANIG</h1>
+            <p class="subtitle">Your Earthquake Notification System</p>
+        </div>
+
+        <div class="content">
+            <div class="step">
+                <h2>🎯 What is YANIG?</h2>
+                <p>YANIG is an intelligent earthquake monitoring system that automatically sends you email notifications when earthquakes occur near your location. Using AI-powered summaries from official PHIVOLCS bulletins, you'll stay informed about seismic activity that matters to you.</p>
+            </div>
+
+            <div class="step">
+                <h2>⚙️ How to Set Up Your Preferences</h2>
+                <ul class="feature-list">
+                    <li><strong>Magnitude Threshold:</strong> Use the slider to set the minimum earthquake magnitude you want to be notified about (1.0 - 9.0)</li>
+                    <li><strong>Location Monitoring:</strong> Choose to monitor earthquakes near your registered location or select a custom location</li>
+                    <li><strong>Safety Tips:</strong> Enable to receive safety recommendations for earthquakes with magnitude ≥ 4.0</li>
+                    <li><strong>Save Changes:</strong> Always click the Save button to update your preferences</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h2>🧪 Test Your Notifications</h2>
+                <p>Use the "Test Email Notification" section to:</p>
+                <ul class="feature-list">
+                    <li>Simulate an earthquake with any magnitude and location</li>
+                    <li>See if you would receive a notification based on your current settings</li>
+                    <li>Receive an actual test email to verify your email notifications are working</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h2>📧 What to Expect</h2>
+                <p>When a real earthquake matches your criteria:</p>
+                <ul class="feature-list">
+                    <li>You'll receive an email within minutes of PHIVOLCS publishing the bulletin</li>
+                    <li>The email includes an AI-generated summary in easy-to-understand language</li>
+                    <li>Complete earthquake details: time, location, magnitude, depth, coordinates</li>
+                    <li>Safety tips if you've enabled them and magnitude ≥ 4.0</li>
+                    <li>Link to the official PHIVOLCS bulletin for detailed information</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h2>🔔 How Often Are Checks Performed?</h2>
+                <p>Our system checks the PHIVOLCS website every 5 minutes for new earthquake bulletins. When a new earthquake is detected, the system:</p>
+                <ul class="feature-list">
+                    <li>Analyzes the magnitude and location</li>
+                    <li>Checks all user preferences</li>
+                    <li>Generates AI summaries for matched users</li>
+                    <li>Sends personalized email notifications</li>
+                </ul>
+            </div>
+
+            <div class="note">
+                <strong>⚠️ Important Notes:</strong>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>Emails are sourced from official PHIVOLCS bulletins</li>
+                    <li>AI summaries are generated to help understanding, but always refer to official bulletins for authoritative information</li>
+                    <li>Make sure your email address is correct to receive notifications</li>
+                    <li>Use the test feature to verify your setup before relying on it</li>
+                </ul>
+            </div>
+
+            <div class="button-container">
+                <a href="{{ url_for('web.dashboard', user_id=session.get('user_id')) }}" class="back-button">← Back to Dashboard</a>
+                <a href="{{ url_for('web.onboarding2') }}" class="next-button">Next: Emergency Kit →</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

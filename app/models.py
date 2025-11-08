@@ -1,5 +1,6 @@
 from app import database
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(database.Model):
     __tablename__ = 'users'
@@ -7,12 +8,21 @@ class User(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     full_name = database.Column(database.String(150), nullable=False)
     email_address = database.Column(database.String(150), unique=True, nullable=False, index=True)
+    password_hash = database.Column(database.String(256), nullable=False)
     user_province = database.Column(database.String(100), nullable=False)
     user_city = database.Column(database.String(100), nullable=False)
     registered_at = database.Column(database.DateTime, default=datetime.utcnow, nullable=False)
     is_active = database.Column(database.Boolean, default=True)
     
     notification_settings = database.relationship('NotificationSettings', backref='owner', uselist=False, cascade='all, delete-orphan')
+    
+    def set_password(self, password):
+        """Hash and set the user's password"""
+        self.password_hash = generate_password_hash(password)
+    
+    def check_password(self, password):
+        """Check if the provided password matches the hash"""
+        return check_password_hash(self.password_hash, password)
     
     def serialize(self):
         return {
