@@ -3,9 +3,11 @@ python-dotenv
 Flask-SQLAlchemy
 Flask-Migrate
 Flask-Mail
+Flask-Session
 celery
 redis
 google-genai
 beautifulsoup4
 requests
 geopy
+lxml

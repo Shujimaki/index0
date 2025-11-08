@@ -15,6 +15,11 @@ redis_client = None
 def build_application(environment='development'):
     application = Flask(__name__)
     application.config.from_object(configuration_map[environment])
+    
+    # Ensure secret key is set for sessions
+    if not application.config.get('SECRET_KEY'):
+        import os
+        application.config['SECRET_KEY'] = os.urandom(24)
 
     database.init_app(application)
     email_service.init_app(application)

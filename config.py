@@ -12,6 +12,11 @@ class BaseConfiguration:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JSON_SORT_KEYS = False
     
+    # Session configuration
+    SESSION_TYPE = 'filesystem'
+    SESSION_PERMANENT = False
+    PERMANENT_SESSION_LIFETIME = 3600  # 1 hour
+    
     # Email settings
     MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
     MAIL_PORT = int(os.getenv('MAIL_PORT', 587))
