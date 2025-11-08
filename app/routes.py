@@ -10,7 +10,7 @@ bp = Blueprint('web', __name__)
 
 @bp.route('/')
 def homepage():
-    return render_template('index.html', current_year=datetime.now().year)
+    return render_template('auth_page.html')
 
 
 @bp.route('/signup', methods=['GET', 'POST'])
