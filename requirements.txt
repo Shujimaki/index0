@@ -2,3 +2,10 @@ Flask
 python-dotenv
 Flask-SQLAlchemy
 Flask-Migrate
+Flask-Mail
+celery
+redis
+google-genai
+beautifulsoup4
+requests
+geopy

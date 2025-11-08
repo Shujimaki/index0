@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block page_title %}Dashboard - {{ user.full_name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>Welcome, {{ user.full_name }}!</h1>
+        <p>Manage your earthquake alert preferences</p>
+    </section>
+    
+    <section class="info">
+        <h2>Your Information</h2>
+        <p><strong>Email:</strong> {{ user.email_address }}</p>
+        <p><strong>Location:</strong> {{ user.user_city }}, {{ user.user_province }}</p>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <h2>Notification Settings</h2>
+        <form method="POST" action="{{ url_for('web.update_settings', user_id=user.id) }}">
+            <div class="form-group">
+                <label for="magnitude_threshold">Minimum Magnitude (1.0 - 9.0):</label>
+                <input type="number" id="magnitude_threshold" name="magnitude_threshold" 
+                       min="1.0" max="9.0" step="0.5" 
+                       value="{{ settings.magnitude_threshold if settings else 3.0 }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Monitor Location:</label>
+                <label><input type="radio" name="location_type" value="near_me" 
+                       {% if not settings or settings.monitor_location_type == 'near_me' %}checked{% endif %}> Near Me ({{ user.user_city }})</label>
+                <label><input type="radio" name="location_type" value="custom" 
+                       {% if settings and settings.monitor_location_type == 'custom' %}checked{% endif %}> Custom Location</label>
+            </div>
+            
+            <div id="custom-location" style="display: none;">
+                <div class="form-group">
+                    <label for="custom_province">Custom Province:</label>
+                    <select id="custom_province" name="custom_province" onchange="loadCustomCities(this.value)">
+                        <option value="">Select Province</option>
+                        {% for province in provinces %}
+                            <option value="{{ province }}" 
+                                {% if settings and settings.alternate_province == province %}selected{% endif %}>
+                                {{ province }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="custom_city">Custom City:</label>
+                    <select id="custom_city" name="custom_city">
+                        <option value="">Select City</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="range_km">Alert Radius (km):</label>
+                <input type="number" id="range_km" name="range_km" min="10" max="500" 
+                       value="{{ settings.proximity_range_km if settings else 100 }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="include_tips" 
+                           {% if not settings or settings.add_safety_tips %}checked{% endif %}>
+                    Include safety tips for magnitude ≥ 4.0
+                </label>
+            </div>
+            
+            <button type="submit">Update Settings</button>
+        </form>
+    </section>
+</div>
+
+<script>
+document.querySelectorAll('input[name="location_type"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        document.getElementById('custom-location').style.display = 
+            this.value === 'custom' ? 'block' : 'none';
+    });
+});
+
+if (document.querySelector('input[name="location_type"]:checked').value === 'custom') {
+    document.getElementById('custom-location').style.display = 'block';
+}
+
+function loadCustomCities(province) {
+    fetch(`/api/cities/${province}`)
+        .then(res => res.json())
+        .then(cities => {
+            const citySelect = document.getElementById('custom_city');
+            citySelect.innerHTML = '<option value="">Select City</option>';
+            cities.forEach(city => {
+                citySelect.innerHTML += `<option value="${city}">${city}</option>`;
+            });
+        });
+}
+</script>
+{% endblock %}
