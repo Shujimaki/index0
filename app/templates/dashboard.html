@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YANIG Dashboard</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', Arial, sans-serif; /* Poppins is close, using sans-serif fallback */
+            background-color: #f7f3ed; /* Light background color */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding-top: 50px;
+        }
+
+        .container {
+            width: 800px;
+            max-width: 95%;
+        }
+
+        /* Header Styling */
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .yanig-logo {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+            background-color: #a52a2a; /* Reddish circle behind logo */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .yanig-logo img {
+            width: 30px; /* Placeholder for logo graphic */
+            height: 30px;
+            border-radius: 50%; /* Make the logo itself round */
+        }
+
+        .yanig-logo-text {
+            color: #a52a2a; /* Reddish text */
+            font-weight: bold;
+            font-size: 1.5em;
+            letter-spacing: 1px;
+            margin-right: 30px;
+        }
+
+        .welcome-text {
+            font-size: 2.5em;
+            color: #4a4a4a;
+        }
+
+        /* Dashboard Card Styling */
+        .dashboard-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .card-header {
+            background-color: #a52a2a; /* Red banner color */
+            color: white;
+            padding: 15px 30px;
+            margin: -30px -30px 30px -30px; /* Stretch across the top */
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        .save-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .save-prompt {
+            font-size: 0.9em;
+            margin-right: 15px;
+            color: #f7f3ed; /* Light text color */
+        }
+
+        .save-button {
+            background-color: #8b0000; /* Darker red */
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .save-button:hover {
+            background-color: #6a0000;
+        }
+
+        /* Magnitude Section */
+        .magnitude-section {
+            margin-bottom: 40px;
+        }
+
+        .magnitude-section h3 {
+            color: #4a4a4a;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .magnitude-slider {
+            flex-grow: 1;
+            margin-right: 20px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 10px;
+            background: #a52a2a; /* Red color */
+            outline: none;
+            border-radius: 5px;
+        }
+
+        /* Custom Thumb for the Slider */
+        .magnitude-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: white;
+            border: 5px solid #a52a2a; /* Red border */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .magnitude-slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: white;
+            border: 5px solid #a52a2a;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .magnitude-display {
+            font-size: 1.1em;
+            color: #a52a2a;
+            width: 200px; /* fixed width for alignment */
+            text-align: right;
+        }
+
+        /* Preferred Location Section */
+        .location-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-top: 30px;
+            border-top: 1px solid #ccc; /* Separator line */
+        }
+        
+        @media (max-width: 768px) {
+            .location-section {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .location-dropdowns {
+                width: 100%;
+                flex-direction: column;
+            }
+            .dropdown-fields select {
+                width: 100%;
+            }
+        }
+
+
+        .location-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .radio-button-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            background-color: #f0f0f0; /* Default background */
+            color: #4a4a4a;
+            width: 150px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        input[type="radio"] {
+            display: none; /* Hide the default radio button */
+        }
+
+        input[type="radio"]:checked + .radio-button-label {
+            background-color: #a52a2a; /* Red when checked */
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Custom Radio Indicator (The small circle) */
+        .radio-button-label::before {
+            content: '';
+            width: 15px;
+            height: 15px;
+            border: 2px solid #a52a2a; /* Red border */
+            border-radius: 50%;
+            margin-right: 10px;
+            box-sizing: border-box;
+            background-color: white;
+        }
+
+        input[type="radio"]:checked + .radio-button-label::before {
+            background-color: #a52a2a; /* Fill with red when checked */
+            border-color: white; /* White border when checked */
+        }
+
+        .location-dropdowns {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .dropdown-labels {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            font-weight: 500;
+            color: #4a4a4a;
+        }
+
+        .dropdown-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .dropdown-fields select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 250px;
+            appearance: none; /* Hide default arrow */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            /* Custom arrow SVG */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.9l-14.7-14.7L146.2%20188.4%2019.4%2055.2l-14.7%2014.7%20141.5%20141.5z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="yanig-logo">
+                <!-- Jinja: Use logo URL passed from Flask --><img src="{{ logo_url }}" alt="YANIG Icon"/>
+            </div>
+            <!-- Removed the line below: <div class="yanig-logo-text">YANIG</div> --><!-- Jinja: Insert mock user name --><h1 class="welcome-text">Welcome, {{ user_name }}!</h1>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2>DASHBOARD</h2>
+                <div class="save-section">
+                    <p class="save-prompt">You have unsaved changes. Save to keep preferences.</p>
+                    <button class="save-button" onclick="alert('Preferences saved successfully!')">Save</button>
+                </div>
+            </div>
+
+            <!-- Form: Assume this form will be submitted to a /save-preferences route --><form id="preferences-form" method="POST" action="/save-preferences">
+                <div class="magnitude-section">
+                    <h3>Minimum Earthquake Magnitude</h3>
+                    <div class="slider-container">
+                        <input type="range" id="magnitude-slider" class="magnitude-slider" min="1" max="9" step="0.5" value="5.0" name="min_magnitude">
+                        <p class="magnitude-display">Magnitude: <span id="magnitude-value">5.0</span></p>
+                    </div>
+                </div>
+
+                <div class="location-section">
+                    <div class="location-options">
+                        <h3>Preferred Location</h3>
+                        <div class="radio-group">
+                            <input type="radio" id="near-me" name="location-preference" value="near-me" checked onchange="toggleLocationDropdowns(false)">
+                            <label for="near-me" class="radio-button-label">Near Me</label>
+                            
+                            <input type="radio" id="choose-location" name="location-preference" value="choose-location" onchange="toggleLocationDropdowns(true)">
+                            <label for="choose-location" class="radio-button-label">Choose Location</label>
+                        </div>
+                    </div>
+
+                    <div class="location-dropdowns">
+                        <div class="dropdown-labels">
+                            <label for="region-select">Region</label>
+                            <label for="province-select">Province</label>
+                            <label for="city-select">City</label>
+                        </div>
+                        <div class="dropdown-fields">
+                            <!-- REGION DROPDOWN: Populated by Jinja loop from Flask --><select id="region-select" name="region" disabled>
+                                <option value="" disabled selected>Select Region</option>
+                                {% for region in regions %}
+                                <option value="{{ region.value }}">{{ region.name }}</option>
+                                {% endfor %}
+                            </select>
+
+                            <!-- PROVINCE DROPDOWN: Populated by JavaScript fetch --><select id="province-select" name="province" disabled>
+                                <option value="" disabled selected>Select Region First</option>
+                            </select>
+
+                            <!-- CITY DROPDOWN: Populated by JavaScript fetch --><select id="city-select" name="city" disabled>
+                                <option value="" disabled selected>Select Province First</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- Slider Logic ---
+        const slider = document.getElementById('magnitude-slider');
+        const magnitudeValue = document.getElementById('magnitude-value');
+
+        // Update the display value whenever the slider moves
+        slider.addEventListener('input', () => {
+            magnitudeValue.textContent = slider.value;
+        });
+
+        // --- Location Dropdown Logic ---
+        const regionSelect = document.getElementById('region-select');
+        const provinceSelect = document.getElementById('province-select');
+        const citySelect = document.getElementById('city-select');
+
+        // Function to enable or disable the location dropdowns
+        function toggleLocationDropdowns(enable) {
+            regionSelect.disabled = !enable;
+            provinceSelect.disabled = !enable;
+            citySelect.disabled = !enable;
+            
+            // Clear selections if disabling
+            if (!enable) {
+                regionSelect.value = "";
+                resetDropdown(provinceSelect, 'Select Region First');
+                resetDropdown(citySelect, 'Select Province First');
+            }
+        }
+        
+        // --- Helper function to reset a dropdown ---
+        function resetDropdown(selectElement, defaultText) {
+            selectElement.innerHTML = `<option value="" disabled selected>${defaultText}</option>`;
+            selectElement.disabled = true;
+            selectElement.value = "";
+        }
+
+        // --- Function to populate Provinces based on Region ---
+        async function populateProvinces(regionCode) {
+            resetDropdown(provinceSelect, 'Loading Provinces...');
+            resetDropdown(citySelect, 'Select Province First');
+
+            if (regionCode) {
+                try {
+                    const response = await fetch(`/api/provinces/${regionCode}`);
+                    const provinces = await response.json();
+
+                    provinceSelect.innerHTML = '<option value="" disabled selected>Select Province</option>';
+
+                    if (provinces.length > 0) {
+                        provinces.forEach(province => {
+                            const option = document.createElement('option');
+                            option.value = province.value;
+                            option.textContent = province.name;
+                            provinceSelect.appendChild(option);
+                        });
+                        provinceSelect.disabled = false;
+                    } else {
+                        resetDropdown(provinceSelect, 'No Provinces Found');
+                    }
+                } catch (error) {
+                    console.error('Error fetching provinces:', error);
+                    resetDropdown(provinceSelect, 'Error Loading');
+                }
+            } else {
+                resetDropdown(provinceSelect, 'Select Region First');
+            }
+        }
+
+        // --- Function to populate Cities based on Province and Region ---
+        async function populateCities(regionCode, provinceCode) {
+            resetDropdown(citySelect, 'Loading Cities...');
+
+            if (regionCode && provinceCode) {
+                try {
+                    const response = await fetch(`/api/cities/${regionCode}/${provinceCode}`);
+                    const cities = await response.json();
+
+                    citySelect.innerHTML = '<option value="" disabled selected>Select City/Municipality</option>';
+
+                    if (cities.length > 0) {
+                        cities.forEach(city => {
+                            const option = document.createElement('option');
+                            
+                            // Client-side check for placeholder names (like 'none', 'none_1', etc.)
+                            if (city.value && city.value.startsWith('none')) {
+                                option.value = 'N/A'; 
+                                option.textContent = 'N/A or None (Municipality)';
+                            } else {
+                                option.value = city.value;
+                                option.textContent = city.name;
+                            }
+                            
+                            citySelect.appendChild(option);
+                        });
+                        citySelect.disabled = false;
+                        
+                        // If only the 'N/A' option is present, auto-select it.
+                        const hasOnlyNA = cities.length === 1 && cities[0].value.startsWith('none');
+                        if (hasOnlyNA) {
+                            citySelect.value = 'N/A';
+                        }
+
+                    } else {
+                        resetDropdown(citySelect, 'No Cities Found');
+                    }
+                } catch (error) {
+                    console.error('Error fetching cities:', error);
+                    resetDropdown(citySelect, 'Error Loading');
+                }
+            } else {
+                resetDropdown(citySelect, 'Select Province First');
+            }
+        }
+
+        // --- Event Listeners ---
+        
+        // 1. When Region changes, load Provinces
+        if (regionSelect) {
+            regionSelect.addEventListener('change', function() {
+                populateProvinces(this.value);
+            });
+        }
+
+        // 2. When Province changes, load Cities
+        if (provinceSelect) {
+            provinceSelect.addEventListener('change', function() {
+                const regionCode = regionSelect.value;
+                if (regionCode) {
+                    populateCities(regionCode, this.value);
+                }
+            });
+        }
+
+        // Initialize: Ensure the dropdowns are disabled on page load since 'Near Me' is checked
+        window.onload = () => {
+            const chooseLocationRadio = document.getElementById('choose-location');
+            toggleLocationDropdowns(chooseLocationRadio.checked);
+            
+            // Set initial magnitude display
+            magnitudeValue.textContent = slider.value;
+        };
+    </script>
+</body>
+</html>
